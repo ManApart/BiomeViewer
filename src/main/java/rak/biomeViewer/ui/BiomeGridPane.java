@@ -82,8 +82,4 @@ public class BiomeGridPane {
 		biomeGrid.getChildren().add(textField);
 	}
 
-
-	
-	
-
 }
