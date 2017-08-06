@@ -1,0 +1,112 @@
+package rak.biomeViewer.controllers;
+
+
+import java.util.Random;
+
+import org.apache.commons.lang3.StringUtils;
+
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import rak.planetGenerator.PlanetGeneratorApplication;
+import rak.planetGenerator.ui.planet.PlanetView;
+
+public class MainMenuController {
+	@FXML protected TextField userEnteredSeed;
+	@FXML protected TextField userEnteredDensity;
+	
+	@FXML protected Label currentSeed;
+	@FXML protected Label currentDensity;
+	
+	@FXML protected Canvas viewBackground;
+	
+	private PlanetView currentView = PlanetView.ALTITUDE;
+	
+	public void initialize(){
+		generate();
+    }
+	
+	@FXML
+	protected void generate(){
+		//TODO - this method could use some cleanup
+		String seed = userEnteredSeed.getText();
+		String density = userEnteredDensity.getText();
+		if (!StringUtils.isNumeric(seed)){
+			System.out.println("User entered Seed is invalid - must be numbers only");
+			currentSeed.setText("ERROR");
+		} else if (!StringUtils.isNumeric(density)){
+			System.out.println("User entered density is invalid - must be numbers only");
+			currentDensity.setText("ERROR");
+		} else {
+			currentSeed.setText(seed);
+			currentDensity.setText(density);
+			long seedValue = Long.parseLong(seed);
+			int densityValue = Integer.parseInt(density);
+			PlanetGeneratorApplication.generatePlanet(seedValue, densityValue);
+			reDrawPlanet();
+		}
+	}
+	
+	@FXML
+	protected void generateRandom(){
+		int seed = new Random().nextInt(1000000);
+		userEnteredSeed.setText("" + seed);
+		generate();
+	}
+	
+	@FXML
+	protected void viewAltitude(){
+		changeView(PlanetView.ALTITUDE);
+	}
+	
+	@FXML
+	protected void viewTemperature(){
+		changeView(PlanetView.TEMPERATURE);
+	}
+	
+	@FXML
+	protected void viewPercipitation(){
+		changeView(PlanetView.PERCIPITATION);
+	}
+	
+	@FXML
+	protected void viewBiome(){
+		changeView(PlanetView.BIOME);
+	}
+	
+	@FXML
+	protected void viewSatalite(){
+		changeView(PlanetView.SATALITE);
+	}
+	
+	@FXML
+	protected void exit(){
+		Platform.exit();
+		System.exit(0);
+	}
+	
+	private void changeView(PlanetView newView){
+		currentView = newView;
+		reDrawPlanet();
+		System.out.println("Viewing " + currentView);
+	}
+	
+	private void reDrawPlanet(){
+		clearCanvas();
+		GraphicsContext gg = viewBackground.getGraphicsContext2D();
+		PlanetGeneratorApplication.drawView(currentView, gg);
+	}
+
+	private void clearCanvas() {
+		GraphicsContext gg = viewBackground.getGraphicsContext2D();
+		Bounds bounds = viewBackground.getBoundsInLocal(); 
+		gg.clearRect(0, 0, bounds.getWidth(), bounds.getHeight());
+		
+	}
+	
+
+}
