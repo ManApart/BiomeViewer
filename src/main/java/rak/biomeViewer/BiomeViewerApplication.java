@@ -1,15 +1,17 @@
 package rak.biomeViewer;
 
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import rak.planetGenerator.PlanetGeneratorApplication;
 import rak.planetGenerator.model.BiomeCollection;
 import rak.planetGenerator.parsers.BiomeParser;
+import rak.utility.ResourceLoader;
+
+import java.io.IOException;
 
 public class BiomeViewerApplication extends Application {
 	private final static String MAIN_MENU = "MainMenu";
@@ -17,6 +19,7 @@ public class BiomeViewerApplication extends Application {
 	private static BiomeCollection biomeCollection;
 	
 	public static void main(String[] args) {
+        ResourceLoader.setRootClass(PlanetGeneratorApplication.class);
 		launch(args);
     }
 
